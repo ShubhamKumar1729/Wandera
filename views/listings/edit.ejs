@@ -1,0 +1,91 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+    .current-destination-image-wrap {
+        width: 100%;
+        margin-right: auto;
+    }
+
+    @media (min-width: 992px) {
+        .current-destination-image-wrap {
+            width: 37.5%;
+        }
+    }
+</style>
+<div class="row justify-content-center add-listing-page">
+    <div class="col-12 col-lg-10 col-xl-8">
+        <section class="add-listing-card">
+            <div class="add-listing-header">
+                <h2 class="add-listing-title">Edit Your Destination</h2>
+                <p class="add-listing-subtitle">Update your travel story details and keep it fresh for new travelers.</p>
+            </div>
+
+            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation add-listing-form" enctype="multipart/form-data">
+                <div class="mb-3 add-field-group">
+                    <label for="title" class="form-label">Title</label>
+                    <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" required>
+                    <div class="invalid-feedback">Title should be valid</div>
+                </div>
+
+                <div class="mb-3 add-field-group">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
+                    <div class="invalid-feedback">Please enter a short description</div>
+                </div>
+
+                <div class="mb-3 add-field-group current-destination-image-wrap">
+                    <label class="form-label">Current Destination Image</label>
+                    <div class="p-2 border rounded-3 bg-light-subtle d-flex justify-content-start">
+                        <img src="<%= originalImageUrl %>" alt="Current destination image" class="img-fluid rounded-3" style="width: 100%; max-height: 120px; object-fit: cover; display: block;">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-7 add-field-group">
+                        <label for="image" class="form-label">Upload New Image</label>
+                        <input name="listing[image][url]" type="file" class="form-control add-file-input">
+                        <div class="invalid-feedback">Image should be valid</div>
+                    </div>
+
+                    <div class="mb-3 col-md-5 add-field-group">
+                        <label class="form-label">Category</label>
+                        <select name="listing[category]" class="form-control" required>
+                            <option value="">Select Category</option>
+                            <option value="Mountain" <%= listing.category === "Mountain" ? "selected" : "" %>>🏔 Mountain</option>
+                            <option value="Beach" <%= listing.category === "Beach" ? "selected" : "" %>>🌊 Beach</option>
+                            <option value="Desert" <%= listing.category === "Desert" ? "selected" : "" %>>🌵 Desert</option>
+                            <option value="City" <%= listing.category === "City" ? "selected" : "" %>>🏙 City</option>
+                            <option value="Forest" <%= listing.category === "Forest" ? "selected" : "" %>>🌲 Forest</option>
+                            <option value="River" <%= listing.category === "River" ? "selected" : "" %>>🌊 River</option>
+                            <option value="Adventure" <%= listing.category === "Adventure" ? "selected" : "" %>>🎯 Adventure</option>
+                        </select>
+                        <div class="invalid-feedback">Category should be valid</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-5 add-field-group">
+                        <label for="budget" class="form-label">Budget Required</label>
+                        <input name="listing[budget]" value="<%= listing.budget ?? listing.price %>" type="number" class="form-control" required>
+                        <div class="invalid-feedback">Budget should be valid</div>
+                    </div>
+
+                    <div class="mb-3 col-md-7 add-field-group">
+                        <label for="country" class="form-label">Country</label>
+                        <input name="listing[country]" value="<%= listing.country %>" type="text" class="form-control" required>
+                        <div class="invalid-feedback">Country name should be valid</div>
+                    </div>
+                </div>
+
+                <div class="mb-3 add-field-group">
+                    <label for="location" class="form-label">Location</label>
+                    <input name="listing[location]" value="<%= listing.location %>" type="text" class="form-control" required>
+                    <div class="invalid-feedback">Location should be valid</div>
+                </div>
+
+                <div class="add-submit-row">
+                    <button class="btn btn-dark add-btn mb-0">Update Destination</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

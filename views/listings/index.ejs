@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wandera - Explore Beyond Boundaries. Discover amazing destinations tailored to your budget.">
+  <title>Wandera - Explore Beyond Boundaries</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- AOS Animation Library -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/responsive-enhancements.css">
+
+</head>
+<body class="home-page">
+
+
+<!-- Dark Mode Toggle Script -->
+<script>
+  // Initialize theme
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+  }
+</script>
+
+<!-- ============================================ -->
+<!-- NAVBAR -->
+<!-- ============================================ -->
+<%- include("../includes/navbar.ejs") %>
+<%- include("../includes/flash.ejs") %>
+
+<% const isProfileListingPage = typeof pageHeading !== 'undefined' && pageHeading; %>
+
+<% if (!isProfileListingPage) { %>
+<!-- ============================================ -->
+<!-- HERO SECTION -->
+<!-- ============================================ -->
+<section class="hero-section">
+  <!-- Background with Overlay -->
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <img 
+      src="https://res.cloudinary.com/dbuzbmcpm/image/upload/v1776359818/wandera_profile/kzmcrxqaefj6i5xrjtxl.jpg" 
+      alt="Travel Background"
+      class="hero-bg-image"
+    >
+  </div>
+
+  <!-- Hero Content -->
+  <div class="container hero-content">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-10">
+        <!-- Main Heading -->
+        <h1 class="hero-title" data-aos="fade-up">
+          Explore Beyond Boundaries
+        </h1>
+        
+        <!-- Subheading -->
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">
+          Discover amazing destinations tailored to your budget. Adventure awaits!
+        </p>
+
+        <!-- Search Bar -->
+        <div class="search-bar-container" data-aos="fade-up" data-aos-delay="200">
+          <form action="/listings/search" method="GET" class="search-bar">
+            
+            <!-- Location Input -->
+            <div class="search-input-group">
+              <label class="search-label">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>Where</span>
+              </label>
+              <input 
+                type="text" 
+                name="search" 
+                class="search-input" 
+                placeholder="Search destinations..."
+              >
+            </div>
+
+            <div class="search-divider"></div>
+
+            <!-- Budget Input -->
+            <div class="search-input-group">
+              <label class="search-label">
+                <i class="bi bi-wallet2"></i>
+                <span>Budget</span>
+              </label>
+              <input 
+                type="number" 
+                name="maxBudget" 
+                class="search-input" 
+                placeholder="Max ₹10,000"
+                min="0"
+              >
+            </div>
+
+            <div class="search-divider"></div>
+
+            <!-- Category Dropdown -->
+            <div class="search-input-group">
+              <label class="search-label">
+                <i class="bi bi-tag-fill"></i>
+                <span>Category</span>
+              </label>
+              <select name="category" class="search-input search-select">
+                <option value="">All Categories</option>
+                <option value="mountain">🏔️ Mountain</option>
+                <option value="beach">🏖️ Beach</option>
+                <option value="desert">🏜️ Desert</option>
+                <option value="city">🏙️ City</option>
+                <option value="adventure">🎯 Adventure</option>
+                <option value="forest">🌲 Forest</option>
+                <option value="river">🌊 River</option>
+              </select>
+            </div>
+
+            <!-- Search Button -->
+            <button type="submit" class="search-btn">
+              <i class="bi bi-search"></i>
+              <span>Search</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="hero-stats" data-aos="fade-up" data-aos-delay="300">
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Destinations</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">100+</div>
+            <div class="stat-label">Happy Travelers</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">4.7+</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator">
+    <div class="mouse">
+      <div class="wheel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- FEATURED CATEGORIES -->
+<!-- ============================================ -->
+<section class="featured-categories">
+  <div class="container">
+    <div class="section-header text-center" data-aos="fade-up">
+      <h2 class="section-title">Explore by Category</h2>
+      <p class="section-subtitle">Find your perfect adventure</p>
+    </div>
+
+    <div class="categories-scroll" data-aos="fade-up" data-aos-delay="100">
+      <!-- Mountain -->
+      <a href="/listings?category=Mountain" class="category-card">
+        <div class="category-icon">🏔️</div>
+        <div class="category-name">Mountains</div>
+        <div class="category-count">50+ places</div>
+      </a>
+
+      <!-- Beach -->
+      <a href="/listings?category=Beach" class="category-card">
+        <div class="category-icon">🏖️</div>
+        <div class="category-name">Beaches</div>
+        <div class="category-count">50+ places</div>
+      </a>
+
+      <!-- Desert -->
+      <a href="/listings?category=Desert" class="category-card">
+        <div class="category-icon">🏜️</div>
+        <div class="category-name">Deserts</div>
+        <div class="category-count">50+ places</div>
+      </a>
+
+      <!-- City -->
+      <a href="/listings?category=City" class="category-card">
+        <div class="category-icon">🏙️</div>
+        <div class="category-name">Cities</div>
+        <div class="category-count">50+ places</div>
+      </a>
+
+      <!-- Forest -->
+      <a href="/listings?category=Forest" class="category-card">
+        <div class="category-icon">🌲</div>
+        <div class="category-name">Forest</div>
+        <div class="category-count">50+ places</div>
+      </a>
+
+      <!-- River -->
+      <a href="/listings?category=River" class="category-card">
+        <div class="category-icon">🌊</div>
+        <div class="category-name">Rivers</div>
+        <div class="category-count">50+ places</div>
+      </a>
+
+      <!-- Adventure -->
+      <a href="/listings?category=Adventure" class="category-card">
+        <div class="category-icon">🎯</div>
+        <div class="category-name">Adventure</div>
+        <div class="category-count">50+ places</div>
+      </a>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- ============================================ -->
+<!-- LISTINGS SECTION -->
+<!-- ============================================ -->
+<section class="listings-section <%= isProfileListingPage ? 'profile-listings-offset' : '' %>">
+  <div class="container">
+    <div class="section-header text-center" data-aos="fade-up">
+      <h2 class="section-title"><%= pageHeading || 'Popular Destinations' %></h2>
+      <p class="section-subtitle"><%= pageSubheading || 'Handpicked journeys just for you' %></p>
+    </div>
+
+    <!-- Skeleton Loader (shown while loading) -->
+    <div class="skeleton-loader" id="skeletonLoader" style="display: none;">
+      <div class="row g-5">
+        <% for(let i = 0; i < 8; i++) { %>
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="skeleton-card">
+              <div class="skeleton-image"></div>
+              <div class="skeleton-content">
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-text"></div>
+                <div class="skeleton-line skeleton-text short"></div>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+
+    <!-- Listings Grid -->
+    <div class="row g-5" id="listingsGrid">
+      <% if (allListings && allListings.length > 0) { %>
+        <% allListings.forEach((listing, index) => { %>
+          <div 
+            class="col-12 col-md-6 col-lg-4" 
+            data-aos="fade-up" 
+            data-aos-delay="<%= index * 50 %>">
+            <a href="/listings/<%= listing._id %>" class="listing-card-link">
+              <div class="listing-card">
+                
+                <!-- Card Image -->
+                <div class="card-image-wrapper">
+                  <img 
+                    src="<%= listing.image?.url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800' %>" 
+                    alt="<%= listing.title %>"
+                    class="card-image"
+                    loading="lazy"
+                  >
+                  
+                  <!-- Category Badge -->
+                  <% if (listing.category) { %>
+                    <span class="category-badge <%= listing.category %>">
+                      <%= listing.category.charAt(0).toUpperCase() + listing.category.slice(1) %>
+                    </span>
+                  <% } %>
+
+                  <% const isWishlisted = currUser && currUser.wishlist && currUser.wishlist.some(savedId => savedId.toString() === listing._id.toString()); %>
+
+                  <!-- Wishlist Icon -->
+                  <button
+                    type="button"
+                    class="wishlist-btn <%= isWishlisted ? 'active' : '' %>"
+                    data-id="<%= listing._id %>"
+                    data-authenticated="<%= currUser ? 'true' : 'false' %>"
+                    data-active="<%= isWishlisted ? 'true' : 'false' %>"
+                    aria-pressed="<%= isWishlisted ? 'true' : 'false' %>"
+                    aria-label="<%= currUser ? (isWishlisted ? 'Remove from wishlist' : 'Add to wishlist') : 'Please login to add wishlist' %>"
+                    title="<%= currUser ? (isWishlisted ? 'Remove from wishlist' : 'Add to wishlist') : 'Please login to add wishlist' %>"
+                  >
+                    <i class="bi <%= isWishlisted ? 'bi-heart-fill' : 'bi-heart' %>"></i>
+                  </button>
+                </div>
+
+                <!-- Card Content -->
+                <div class="card-content">
+                  <!-- Title & Location -->
+                  <h3 class="card-title">
+                    <%= listing.title %>
+                  </h3>
+                  
+                  <% if (listing.location) { %>
+                    <p class="card-location">
+                      <i class="bi bi-geo-alt"></i>
+                      <%= listing.location %>
+                    </p>
+                  <% } %>
+
+                  <!-- Description -->
+                  <% if (listing.description) { %>
+                    <p class="card-description">
+                      <%= listing.description.substring(0, 80) %><%= listing.description.length > 80 ? '...' : '' %>
+                    </p>
+                  <% } %>
+
+                  <!-- Footer -->
+                  <div class="card-footer">
+                    <!-- Budget -->
+                    <div class="card-price">
+                      <span class="price-amount">₹<%= Number(listing.budget ?? listing.price ?? 0).toLocaleString('en-IN') %></span>
+                      <span class="price-period">for this trip</span>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="card-rating">
+                      <i class="bi bi-star-fill"></i>
+                      <span><%= listing.avgRating > 0 ? listing.avgRating : 'New' %></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <!-- Empty State -->
+        <div class="col-12">
+          <div class="empty-state" data-aos="fade-up">
+            <div class="empty-icon">🧳</div>
+            <h3><%= emptyTitle || 'No destinations found' %></h3>
+            <p><%= emptyMessage || 'Start exploring by sharing your first journey!' %></p>
+            <a
+              href="<%= currUser ? '/listings/new' : '#' %>"
+              class="btn btn-primary-custom mt-3"
+              <% if (!currUser) { %>data-requires-login="add-experience"<% } %>
+            >
+              Add Your First Destination
+            </a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Load More Button -->
+    <% if (allListings && allListings.length > 9) { %>
+      <div class="text-center mt-5" data-aos="fade-up">
+        <button class="btn btn-outline-primary-custom" id="loadMoreBtn">
+          Load More Destinations
+          <i class="bi bi-arrow-down ms-2"></i>
+        </button>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<% if (!isProfileListingPage) { %>
+<!-- ============================================ -->
+<!-- FEATURED DESTINATIONS -->
+<!-- ============================================ -->
+<section class="featured-destinations">
+  <div class="container">
+    <div class="section-header text-center" data-aos="fade-up">
+      <h2 class="section-title">Trending Destinations</h2>
+      <p class="section-subtitle">Most loved destinations for your next trip</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Featured Card 1 -->
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="featured-card featured-large category-click-card" data-category="mountain" role="link" tabindex="0" aria-label="Explore mountain destinations">
+          <img 
+            src="https://www.tibettravel.org/blog/wp-content/uploads/2017/09/gama-valley-1.jpg" 
+            alt="Mountain Paradise"
+            class="featured-image"
+          >
+          <div class="featured-overlay">
+            <div class="featured-content">
+              <span class="featured-label">Editor's Pick</span>
+              <h3 class="featured-title featured-title-light himalayan-title">Himalayan Paradise</h3>
+              <p class="featured-desc">Enjoy breathtaking mountain views</p>
+              <a href="/listings?category=mountain" class="btn btn-light-custom">
+                Explore Now
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Cards 2-4 -->
+      <div class="col-lg-6">
+        <div class="row g-4">
+          <div class="col-12" data-aos="fade-left" data-aos-delay="100">
+            <div class="featured-card featured-medium category-click-card" data-category="beach" role="link" tabindex="0" aria-label="Explore beach destinations">
+              <img 
+                src="https://tibro.in/blog/wp-content/uploads/2026/01/Mauritius-1024x683.jpg" 
+                alt="Beach Getaway"
+                class="featured-image"
+              >
+              <div class="featured-overlay">
+                <div class="featured-content">
+                  <h3 class="featured-title featured-title-light">Tropical Beaches</h3>
+                  <p class="featured-desc">Sun, sand, and serenity</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="featured-card featured-small category-click-card" data-category="desert" role="link" tabindex="0" aria-label="Explore desert destinations">
+              <img 
+                src="https://www.pelago.com/img/products/AE-United%20Arab%20Emirates/morning-desert-safari-in-dubai/eb2d179d-6355-466d-b707-e704786f4614_morning-desert-safari-in-dubai-large.webp" 
+                alt="Desert Safari"
+                class="featured-image"
+              >
+              <div class="featured-overlay">
+                <div class="featured-content">
+                  <h4 class="featured-title small featured-title-light">Desert Safari</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6" data-aos="fade-left" data-aos-delay="300">
+            <div class="featured-card featured-small category-click-card" data-category="city" role="link" tabindex="0" aria-label="Explore city destinations">
+              <img 
+                src="https://sereneworld.in/uploads/blogs/1698478088_main.jpg" 
+                alt="City Lights"
+                class="featured-image"
+              >
+              <div class="featured-overlay">
+                <div class="featured-content">
+                  <h4 class="featured-title small featured-title-light">Urban Escapes</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CALL TO ACTION -->
+<!-- ============================================ -->
+<section class="cta-section" data-aos="fade-up">
+  <div class="container">
+    <div class="cta-content">
+      <div class="row align-items-center">
+        <div class="col-lg-8 text-center text-lg-start">
+          <h2 class="cta-title">Share Your Travel Experience</h2>
+          <p class="cta-description">
+            Have an amazing place to recommend? Join thousands of travelers sharing their destinations.
+          </p>
+        </div>
+        <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
+          <a
+            href="<%= currUser ? '/listings/new' : '#' %>"
+            class="btn btn-light-cta"
+            <% if (!currUser) { %>data-requires-login="add-experience"<% } %>
+          >
+            <i class="bi bi-plus-circle me-2"></i>
+            Add Your Destination
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- ============================================ -->
+<!-- FOOTER -->
+<!-- ============================================ -->
+<%- include("../includes/auth-modal.ejs") %>
+<%- include("../includes/footer.ejs") %>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- ============================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================ -->
+
+<!-- AOS Animation Library -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Shared wishlist behavior -->
+<script src="/js/wishlist.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+  // ===================================
+  // Initialize AOS Animations
+  // ===================================
+  AOS.init({
+    duration: 800,
+    easing: 'ease-in-out',
+    once: true,
+    offset: 100
+  });
+
+  // ===================================
+  // Auto-scroll to listings section on explore/search pages (with filter or explore param)
+  // ===================================
+  const urlParams = new URLSearchParams(window.location.search);
+  const hasSearchParams = urlParams.has('search') || urlParams.has('category') || urlParams.has('maxBudget') || urlParams.has('minBudget') || urlParams.has('maxPrice') || urlParams.has('minPrice');
+  const isExplore = urlParams.get('explore') === '1';
+
+  if ((window.location.pathname === '/listings' && (hasSearchParams || isExplore)) || window.location.pathname === '/listings/search') {
+    setTimeout(() => {
+      const listingsSection = document.querySelector('.listings-section');
+      if (listingsSection) {
+        listingsSection.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 500); // Small delay to ensure page is fully loaded
+  }
+
+  // ===================================
+  // Navbar Scroll Effect
+  // ===================================
+  const navbar = document.getElementById('mainNav');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+
+    if (currentScroll > 100) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+
+    lastScroll = currentScroll;
+  });
+
+  // ===================================
+  // Dark Mode Toggle
+  // ===================================
+  const themeToggles = Array.from(document.querySelectorAll('[data-theme-toggle]'));
+  const body = document.body;
+
+  themeToggles.forEach((themeToggle) => {
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+
+      const currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+      localStorage.setItem('theme', currentTheme);
+      document.documentElement.setAttribute('data-theme', currentTheme);
+    });
+  });
+
+  // ===================================
+  // Back to Top Button
+  // ===================================
+  const backToTopBtn = document.getElementById('backToTop');
+
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTopBtn.classList.add('show');
+    } else {
+      backToTopBtn.classList.remove('show');
+    }
+  });
+
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+
+  // ===================================
+  // Simulate Loading with Skeleton
+  // ===================================
+  window.addEventListener('load', () => {
+    const skeleton = document.getElementById('skeletonLoader');
+    const listingsGrid = document.getElementById('listingsGrid');
+
+    // Simulate loading (remove this in production)
+    // skeleton.style.display = 'block';
+    // listingsGrid.style.display = 'none';
+    
+    // setTimeout(() => {
+    //   skeleton.style.display = 'none';
+    //   listingsGrid.style.display = 'flex';
+    // }, 1500);
+  });
+
+  // ===================================
+  // Listings Pagination (9 per click)
+  // ===================================
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  const listingsGrid = document.getElementById('listingsGrid');
+
+  if (listingsGrid) {
+    const listingCards = Array.from(listingsGrid.children).filter((item) =>
+      item.querySelector('.listing-card-link')
+    );
+
+    const getBatchSize = () => (window.matchMedia('(max-width: 575.98px)').matches ? 5 : 9);
+    let visibleCount = getBatchSize();
+
+    const renderVisibleListings = () => {
+      listingCards.forEach((card, index) => {
+        if (index < visibleCount) {
+          card.classList.remove('d-none');
+        } else {
+          card.classList.add('d-none');
+        }
+      });
+
+      if (loadMoreBtn) {
+        loadMoreBtn.style.display = visibleCount >= listingCards.length ? 'none' : 'inline-flex';
+      }
+    };
+
+    renderVisibleListings();
+
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        visibleCount += getBatchSize();
+        renderVisibleListings();
+      });
+    }
+  }
+
+  // ===================================
+  // Featured Card Category Navigation
+  // ===================================
+  document.querySelectorAll('.category-click-card').forEach((card) => {
+    const category = card.dataset.category;
+
+    if (!category) {
+      return;
+    }
+
+    const navigateToCategory = () => {
+      const params = new URLSearchParams({ category });
+      window.location.href = `/listings?${params.toString()}`;
+    };
+
+    card.addEventListener('click', (event) => {
+      // Allow existing links/buttons inside the card to keep their own behavior.
+      if (event.target.closest('a, button, input, select, textarea, label')) {
+        return;
+      }
+
+      navigateToCategory();
+    });
+
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        navigateToCategory();
+      }
+    });
+  });
+
+  // ===================================
+  // Smooth Scroll for Anchor Links
+  // ===================================
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+
+</script>
+
+  <!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/script.js"></script>
+  <script>
+    (function () {
+      const authModalParam = new URLSearchParams(window.location.search).get('modal');
+
+      if (authModalParam !== 'login' && authModalParam !== 'signup') {
+        return;
+      }
+
+      const authModalElement = document.getElementById('authModal');
+      if (!authModalElement || !window.bootstrap) {
+        return;
+      }
+
+      if (window.setAuthModalMode) {
+        window.setAuthModalMode(authModalParam);
+      } else {
+        authModalElement.dataset.authOpen = authModalParam;
+      }
+
+      const authModal = bootstrap.Modal.getOrCreateInstance(authModalElement);
+      authModal.show();
+      window.history.replaceState({}, document.title, window.location.pathname);
+    })();
+  </script>
+</body>
+</html>

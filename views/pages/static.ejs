@@ -1,0 +1,181 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .content-page-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.25rem 0 2.5rem;
+  }
+
+  .content-hero {
+    border: 1px solid rgba(31, 45, 61, 0.12);
+    border-radius: 22px;
+    padding: 2rem;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(93, 173, 226, 0.2), transparent 35%),
+      radial-gradient(circle at 88% 90%, rgba(116, 185, 255, 0.18), transparent 38%),
+      #ffffff;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  }
+
+  .content-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(31, 45, 61, 0.15);
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #243447;
+    margin-bottom: 0.85rem;
+  }
+
+  .content-title {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+    font-weight: 700;
+    color: #142032;
+  }
+
+  .content-subtitle {
+    margin: 0.75rem 0 0;
+    color: #4f6177;
+    max-width: 760px;
+  }
+
+  .highlight-list {
+    margin: 1.2rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .highlight-list li {
+    border-radius: 12px;
+    border: 1px solid rgba(31, 45, 61, 0.12);
+    background: rgba(255, 255, 255, 0.75);
+    padding: 0.7rem 0.8rem;
+    font-size: 0.92rem;
+    color: #243447;
+  }
+
+  .content-sections {
+    margin-top: 1.4rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .content-block {
+    border-radius: 16px;
+    border: 1px solid rgba(31, 45, 61, 0.12);
+    background: #ffffff;
+    padding: 1rem;
+  }
+
+  .content-block h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #15233a;
+  }
+
+  .content-block p {
+    margin: 0.55rem 0 0;
+    color: #506279;
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+
+  .content-cta {
+    margin-top: 1.3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border-radius: 12px;
+    padding: 0.62rem 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #2b7de9 0%, #4f9fff 100%);
+    border: 1px solid rgba(43, 125, 233, 0.3);
+  }
+
+  .content-cta:hover {
+    color: #fff;
+    filter: brightness(1.05);
+  }
+
+  .dark-mode .content-hero,
+  [data-theme="dark"] .content-hero {
+    border-color: #2f415a;
+    background:
+      radial-gradient(circle at 10% 14%, rgba(93, 173, 226, 0.2), transparent 35%),
+      radial-gradient(circle at 88% 90%, rgba(63, 118, 194, 0.2), transparent 40%),
+      #1b2638;
+  }
+
+  .dark-mode .content-badge,
+  [data-theme="dark"] .content-badge {
+    color: #d8e7fb;
+    border-color: #445b7a;
+    background: rgba(26, 39, 58, 0.7);
+  }
+
+  .dark-mode .content-title,
+  [data-theme="dark"] .content-title,
+  .dark-mode .content-block h3,
+  [data-theme="dark"] .content-block h3 {
+    color: #e8f1ff;
+  }
+
+  .dark-mode .content-subtitle,
+  [data-theme="dark"] .content-subtitle,
+  .dark-mode .content-block p,
+  [data-theme="dark"] .content-block p {
+    color: #b2c5de;
+  }
+
+  .dark-mode .highlight-list li,
+  [data-theme="dark"] .highlight-list li,
+  .dark-mode .content-block,
+  [data-theme="dark"] .content-block {
+    color: #d6e5fa;
+    border-color: #3b516f;
+    background: #182335;
+  }
+</style>
+
+<div class="content-page-shell">
+  <section class="content-hero">
+    <span class="content-badge"><%= page.badge %></span>
+    <h1 class="content-title"><%= page.title %></h1>
+    <p class="content-subtitle"><%= page.subtitle %></p>
+
+    <% if (page.highlights && page.highlights.length) { %>
+      <ul class="highlight-list">
+        <% page.highlights.forEach((item) => { %>
+          <li><%= item %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <% if (page.sections && page.sections.length) { %>
+      <div class="content-sections">
+        <% page.sections.forEach((section) => { %>
+          <article class="content-block">
+            <h3><%= section.heading %></h3>
+            <p><%= section.body %></p>
+          </article>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <% if (page.cta && page.cta.href) { %>
+      <a class="content-cta" href="<%= page.cta.href %>">
+        <%= page.cta.label %>
+        <i class="bi bi-arrow-right"></i>
+      </a>
+    <% } %>
+  </section>
+</div>

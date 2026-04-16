@@ -1,0 +1,69 @@
+<% layout("/layouts/boilerplate") %>
+<div class="row justify-content-center add-listing-page">
+    <div class="col-12 col-lg-10 col-xl-8">
+        <section class="add-listing-card">
+            <div class="add-listing-header">
+                <h2 class="add-listing-title">Share Your Travel Experience</h2>
+                <p class="add-listing-subtitle">Create a travel story people can discover, plan around, and enjoy within budget.</p>
+            </div>
+
+            <form method="POST" action="/listings" novalidate class="needs-validation add-listing-form" enctype="multipart/form-data">
+            <div class="mb-3 add-field-group">
+                <label for="title" class="form-label">Title</label>
+                <input name="listing[title]" type="text" class="form-control" placeholder="Enter title" required>
+                <div class="valid-feedback">Title looks good!</div>
+                <div class="invalid-feedback">Title should be valid</div>
+            </div>
+            <div class="mb-3 add-field-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="listing[description]" class="form-control" placeholder="Tell travelers what makes this destination special" required></textarea>
+                <div class="invalid-feedback">Please enter a short description</div>
+            </div>
+            <div class="row">
+
+                <div class="mb-3 col-md-7 add-field-group">
+                    <label for="image" class="form-label">Upload Destination Image</label>
+                    <input name="listing[image][url]" type="file" class="form-control add-file-input" required>
+                    <div class="invalid-feedback">Image should be valid</div>
+                </div>
+
+                <div class="mb-3 col-md-5 add-field-group">
+                    <label class="form-label">Category</label>
+                    <select name="listing[category]" class="form-control" required>
+                    <option value="">Select Category</option>
+                    <option value="Mountain">🏔 Mountain</option>
+                    <option value="Beach">🌊 Beach</option>
+                    <option value="Desert">🌵 Desert</option>
+                    <option value="City">🏙 City</option>
+                    <option value="Forest">🌲 Forest</option>
+                    <option value="River">🌊 River</option>
+                    <option value="Adventure">🎯 Adventure</option>
+                    </select>
+                    <div class="invalid-feedback">Category should be valid</div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-5 add-field-group">
+                    <label for="budget" class="form-label">Budget Required</label>
+                    <input name="listing[budget]" placeholder="Enter your estimated travel budget" class="form-control" required>
+                    <div class="invalid-feedback">Budget should be valid</div>
+                </div>
+                <div class="mb-3 col-md-7 add-field-group">
+                    <label for="country" class="form-label">Country</label>
+                    <input name="listing[country]" placeholder="India" type="text" class="form-control" required>
+                    <div class="invalid-feedback">Country name should be valid</div>
+                </div>
+            </div>
+            <div class="mb-3 add-field-group">
+                <label for="location" class="form-label">Location</label>
+                <input name="listing[location]" placeholder="Jalandhar, Punjab" type="text" class="form-control" required> 
+                <div class="invalid-feedback">Location should be valid</div>
+            </div>
+            <div class="add-submit-row">
+                <button class="btn btn-dark add-btn mb-0">Publish Destination</button>
+            </div>
+            </form>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<% layout("/layouts/boilerplate") %>
+<div class="auth-page">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="auth-card">
+                <h1 class="auth-title">Login to Wandera</h1>
+                <p class="auth-subtitle">Welcome back. Continue your travel journey.</p>
+
+                <form action="/login" method="POST" novalidate class="needs-validation auth-form">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input name="username" type="text" class="form-control" id="username" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Username should be valid</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="password-field">
+                            <input name="password" type="password" class="form-control" id="password" required data-password-input>
+                            <button class="password-toggle-btn" type="button" data-password-toggle aria-label="Show password" aria-pressed="false">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <div class="invalid-feedback">Password should be valid</div>
+                    </div>
+                    <button class="btn auth-btn-primary w-100">Login</button>
+                </form>
+
+                <div class="auth-divider"></div>
+
+                <a href="/auth/google" class="btn auth-btn-google w-100">
+                    Login with Google
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

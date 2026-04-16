@@ -1,0 +1,550 @@
+<% layout("/layouts/boilerplate") %>
+
+<% const tripBudget = Number(listing.budget ?? listing.price ?? 0); %>
+
+<!-- ============================================ -->
+<!-- LISTING DETAIL PAGE -->
+<!-- ============================================ -->
+
+<div class="show-page-wrapper">
+  <div class="container show-container">
+
+    <div class="row justify-content-center">
+      <div class="col-12">
+        
+        <!-- ============================================ -->
+        <!-- HERO IMAGE SECTION -->
+        <!-- ============================================ -->
+        <div class="show-hero" data-aos="fade-up">
+          <div class="show-img-wrapper">
+            <img 
+              src="<%= listing.image && listing.image.url ? listing.image.url : 'https://via.placeholder.com/1200x700' %>" 
+              alt="<%= listing.title %>"
+              class="show-img"
+            >
+            <div class="show-img-overlay"></div>
+            
+            <!-- Quick Actions on Image -->
+            <div class="show-quick-actions">
+              <button class="quick-action-btn share-btn" title="Share">
+                <i class="bi bi-share"></i>
+              </button>
+              <% const isWishlisted = currUser && currUser.wishlist && currUser.wishlist.some(savedId => savedId.toString() === listing._id.toString()); %>
+              <button
+                type="button"
+                class="quick-action-btn save-btn <%= isWishlisted ? 'active' : '' %>"
+                data-id="<%= listing._id %>"
+                data-authenticated="<%= currUser ? 'true' : 'false' %>"
+                data-active="<%= isWishlisted ? 'true' : 'false' %>"
+                aria-pressed="<%= isWishlisted ? 'true' : 'false' %>"
+                aria-label="<%= currUser ? (isWishlisted ? 'Remove from wishlist' : 'Add to wishlist') : 'Please login to add wishlist' %>"
+                title="<%= currUser ? (isWishlisted ? 'Remove from wishlist' : 'Save to Wishlist') : 'Please login to add wishlist' %>"
+              >
+                <i class="bi <%= isWishlisted ? 'bi-heart-fill' : 'bi-heart' %>"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- MAIN CONTENT GRID -->
+        <!-- ============================================ -->
+        <div class="show-content-grid">
+          
+          <!-- Left Column: Main Content -->
+          <div class="show-main-content">
+            
+            <!-- ============================================ -->
+            <!-- LISTING HEADER -->
+            <!-- ============================================ -->
+            <div class="listing-header" data-aos="fade-up" data-aos-delay="100">
+              <div class="listing-title-section">
+                <h1 class="listing-title"><%= listing.title %></h1>
+                
+                <!-- Location & Rating Row -->
+                <div class="listing-meta">
+                  <div class="location-info">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <span><%= listing.location %>, <%= listing.country %></span>
+                  </div>
+                  
+                  <!-- Rating Display -->
+                  <% if (typeof avgRating !== 'undefined' && avgRating > 0) { %>
+                    <div class="rating-display">
+                      <i class="bi bi-star-fill rating-star"></i>
+                      <span class="rating-number"><%= avgRating.toFixed(1) %></span>
+                      <span class="rating-count">(<%= typeof totalReviews !== 'undefined' ? totalReviews : listing.reviews.length %> reviews)</span>
+                    </div>
+                  <% } else { %>
+                    <div class="rating-display">
+                      <span class="no-rating">No reviews yet</span>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+              
+              <!-- Host Info -->
+              <div class="host-info">
+                <div class="host-avatar">
+                  <% if (listing.owner && listing.owner.profileImage && listing.owner.profileImage.url) { %>
+                    <img
+                      src="<%= listing.owner.profileImage.url %>"
+                      alt="<%= listing.owner.username ? listing.owner.username : 'Host' %> profile"
+                      class="avatar-photo"
+                    >
+                  <% } else if (listing.owner && listing.owner.username) { %>
+                    <%= listing.owner.username.charAt(0).toUpperCase() %>
+                  <% } else { %>
+                    ?
+                  <% } %>
+                </div>
+                <div class="host-details">
+                  <span class="host-label">Shared by</span>
+                  <span class="host-name"><%= listing.owner && listing.owner.username ? listing.owner.username : 'Unknown Host' %></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- LISTING DESCRIPTION -->
+            <!-- ============================================ -->
+            <div class="listing-card description-card" data-aos="fade-up" data-aos-delay="150">
+              <p class="listing-description"><%= listing.description %></p>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- OWNER CONTROLS -->
+            <!-- ============================================ -->
+            <% if (currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
+              <div class="owner-controls" data-aos="fade-up" data-aos-delay="200">
+                <div class="controls-header">
+                  <i class="bi bi-shield-check"></i>
+                  <span>You own this destination</span>
+                </div>
+                <div class="controls-actions">
+                  <a href="/listings/<%= listing._id %>/edit" class="btn btn-edit">
+                    <i class="bi bi-pencil-square"></i>
+                    <span class="btn-label-full">Edit Destination</span>
+                    <span class="btn-label-short">Edit</span>
+                  </a>
+                  <form 
+                    method="POST" 
+                    action="/listings/<%= listing._id %>?_method=DELETE"
+                    class="delete-form"
+                  >
+                    <button type="submit" class="btn btn-delete">
+                      <i class="bi bi-trash3"></i>
+                      <span class="btn-label-full">Delete Destination</span>
+                      <span class="btn-label-short">Delete</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% } %>
+
+            <!-- ============================================ -->
+            <!-- MAP SECTION -->
+            <!-- ============================================ -->
+            <div class="listing-card map-card" data-aos="fade-up" data-aos-delay="250">
+              <div class="map-container">
+                <div id="map"></div>
+              </div>
+              <p class="map-location-text">
+                <i class="bi bi-geo-alt"></i>
+                <%= listing.location %>, <%= listing.country %>
+              </p>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- REVIEWS SECTION -->
+            <!-- ============================================ -->
+            <div class="reviews-section" data-aos="fade-up" data-aos-delay="300">
+              <div class="reviews-header">
+                <h3 class="card-section-title">
+                  <i class="bi bi-star-fill"></i>
+                  Traveler Reviews
+                  <% if (typeof totalReviews !== 'undefined' && totalReviews > 0) { %>
+                    <span class="review-count-badge"><%= totalReviews %></span>
+                  <% } %>
+                </h3>
+                
+                <!-- Average Rating Display -->
+                <% if (typeof avgRating !== 'undefined' && avgRating > 0) { %>
+                  <div class="avg-rating-box">
+                    <div class="avg-rating-number"><%= avgRating.toFixed(1) %></div>
+                    <div id="avg-stars" data-rating="<%= avgRating %>"></div>
+                  </div>
+                <% } %>
+              </div>
+
+              <!-- Reviews Grid -->
+              <% if (listing.reviews && listing.reviews.length > 0) { %>
+                <div class="reviews-grid" id="reviewsGrid">
+                  <% for (let i = 0; i < listing.reviews.length; i++) { 
+                       let review = listing.reviews[i];
+                       let isHidden = i >= 6; %>
+                    <div class="review-card<%= isHidden ? ' hidden-review' : '' %>" data-aos="fade-up" data-review-index="<%= i %>">
+                      <!-- Review Header -->
+                      <div class="review-header">
+                        <div class="reviewer-info">
+                          <div class="reviewer-avatar">
+                            <% if (review.author && review.author.profileImage && review.author.profileImage.url) { %>
+                              <img
+                                src="<%= review.author.profileImage.url %>"
+                                alt="<%= review.author.username ? review.author.username : 'Reviewer' %> profile"
+                                class="avatar-photo"
+                              >
+                            <% } else if (review.author) { %>
+                              <%= review.author.username.charAt(0).toUpperCase() %>
+                            <% } else { %>
+                              D
+                            <% } %>
+                          </div>
+                          <div class="reviewer-details">
+                            <h5 class="reviewer-name">
+                              <% if (review.author) { %>
+                                <%= review.author.username %>
+                              <% } else { %>
+                                Deleted User
+                              <% } %>
+                            </h5>
+                            <% if (review.createdAt) { %>
+                              <span class="review-date">
+                                <%= new Date(review.createdAt).toLocaleDateString('en-US', { 
+                                  year: 'numeric', 
+                                  month: 'short', 
+                                  day: 'numeric' 
+                                }) %>
+                              </span>
+                            <% } %>
+                          </div>
+                        </div>
+                        
+                        <!-- Star Rating -->
+                        <div class="starability-result" data-rating="<%= review.rating %>">
+                          Rated: <%= review.rating %> stars
+                        </div>
+                      </div>
+
+                      <!-- Review Comment -->
+                      <p class="review-comment"><%= review.comment %></p>
+
+                      <!-- Delete Button (if owner of review) -->
+                      <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
+                        <form 
+                          method="POST" 
+                          action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                          class="review-delete-form"
+                        >
+                          <button type="submit" class="btn-review-delete">
+                            <i class="bi bi-trash3"></i>
+                            Delete
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                  <% } %>
+                </div>
+                
+                <!-- Load More Reviews Button -->
+                <% if (listing.reviews && listing.reviews.length > 6) { %>
+                  <div class="load-more-container">
+                    <button id="loadMoreBtn" class="btn btn-load-more">
+                      <i class="bi bi-arrow-down"></i>
+                      Load More Reviews
+                    </button>
+                  </div>
+                <% } %>
+              <% } else { %>
+                <!-- Empty State -->
+                <div class="reviews-empty-state">
+                  <div class="empty-icon">
+                    <i class="bi bi-chat-left-text"></i>
+                  </div>
+                  <h4>No reviews yet</h4>
+                  <p>Be the first to share this journey!</p>
+                </div>
+              <% } %>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ADD REVIEW FORM -->
+            <!-- ============================================ -->
+            <% if (currUser) { %>
+              <div class="review-form-section" data-aos="fade-up" data-aos-delay="350">
+                <div class="listing-card review-form-card">
+                  <h3 class="card-section-title">
+                    <i class="bi bi-pencil-square"></i>
+                    Share a Review
+                  </h3>
+                  
+                  <form 
+                    method="POST" 
+                    action="/listings/<%= listing._id %>/reviews" 
+                    class="review-form needs-validation"
+                    novalidate
+                  >
+                    <!-- Rating Input -->
+                    <div class="form-group">
+                      <label for="rating" class="form-label">
+                        Rating
+                        <span class="required">*</span>
+                      </label>
+                      <fieldset class="starability-slot">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
+                        
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                      </fieldset>
+                    </div>
+
+                    <!-- Comment Textarea -->
+                    <div class="form-group">
+                      <label for="comment" class="form-label">
+                        Your Journey
+                        <span class="required">*</span>
+                      </label>
+                      <textarea 
+                        name="review[comment]" 
+                        id="comment" 
+                        cols="30" 
+                        rows="5"
+                        class="form-control form-textarea"
+                        placeholder="Share details of the trip and what made it memorable..."
+                        required
+                      ></textarea>
+                      <div class="invalid-feedback">
+                        Please enter your review comment.
+                      </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-submit-review">
+                      <i class="bi bi-send"></i>
+                      Submit Review
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% } else { %>
+              <!-- Login Prompt -->
+              <div class="review-login-prompt" data-aos="fade-up">
+                <div class="prompt-content">
+                  <i class="bi bi-lock"></i>
+                  <h4>Want to leave a review?</h4>
+                  <p>Please log in to share your destination</p>
+                  <a href="/login" class="btn btn-login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Log In
+                  </a>
+                </div>
+              </div>
+            <% } %>
+
+          </div>
+
+          <!-- ============================================ -->
+          <!-- RIGHT SIDEBAR: BOOKING CARD -->
+          <!-- ============================================ -->
+          <div class="show-sidebar">
+            <div class="booking-card" data-aos="fade-left" data-aos-delay="200">
+              <!-- Budget Header -->
+              <div class="booking-price-header">
+                <div class="price-info">
+                  <span class="price-amount">₹<%= tripBudget.toLocaleString('en-IN') %></span>
+                  <span class="price-period">for this trip</span>
+                </div>
+                <% if (typeof avgRating !== 'undefined' && avgRating > 0) { %>
+                  <div class="booking-rating">
+                    <i class="bi bi-star-fill"></i>
+                    <span><%= avgRating.toFixed(1) %></span>
+                  </div>
+                <% } %>
+              </div>
+
+              <!-- Trip Planning Features -->
+              <div class="booking-features">
+                <div class="feature-item">
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span>Flexible planning</span>
+                </div>
+                <div class="feature-item">
+                  <i class="bi bi-shield-check"></i>
+                  <span>Verified destination</span>
+                </div>
+                <div class="feature-item">
+                  <i class="bi bi-arrow-clockwise"></i>
+                  <span>Easy trip adjustments</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <!-- Info Notice -->
+              <div class="booking-notice">
+                <i class="bi bi-info-circle"></i>
+                <span>You can review the trip details before confirming</span>
+              </div>
+            </div>
+
+            <!-- Additional Info Card -->
+            <div class="info-highlights-card" data-aos="fade-left" data-aos-delay="300">
+              <h4 class="highlights-title">Trip Highlights</h4>
+              <div class="highlight-item">
+                <i class="bi bi-house-door"></i>
+                <div>
+                  <strong>Flexible itinerary</strong>
+                  <p>Plan the trip your way</p>
+                </div>
+              </div>
+              <div class="highlight-item">
+                <i class="bi bi-key"></i>
+                <div>
+                  <strong>Easy start</strong>
+                  <p>Arrive and settle in smoothly</p>
+                </div>
+              </div>
+              <div class="highlight-item">
+                <i class="bi bi-stars"></i>
+                <div>
+                  <strong>Great location</strong>
+                  <p>Recent travelers loved the location</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- HIDDEN DATA FOR SCRIPTS -->
+<!-- ============================================ -->
+<script id="listing-data" type="application/json">
+  <%- JSON.stringify({
+    title: listing.title,
+    location: listing.location,
+    budget: tripBudget,
+    geometry: listing.geometry
+  }) %>
+</script>
+
+<!-- ============================================ -->
+<!-- EXTERNAL SCRIPTS -->
+<!-- ============================================ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="/js/rating.js"></script>
+<script src="/js/map.js"></script>
+<script src="/js/wishlist.js"></script>
+
+<!-- ============================================ -->
+<!-- PAGE SCRIPTS -->
+<!-- ============================================ -->
+<script>
+  // Share functionality
+  document.querySelector('.share-btn')?.addEventListener('click', async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: '<%= listing.title %>',
+          text: 'Check out this amazing place on Wandera!',
+          url: window.location.href
+        });
+      } catch (err) {
+        console.log('Share cancelled');
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  });
+
+  // Form validation
+  (function() {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+
+  // Delete confirmation
+  document.querySelectorAll('.btn-delete, .btn-review-delete').forEach(btn => {
+    btn.closest('form')?.addEventListener('submit', function(e) {
+      if (!confirm('Are you sure you want to delete? This action cannot be undone.')) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // Load More Reviews functionality
+  let currentVisibleIndex = 6;
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  const reviewsGrid = document.getElementById('reviewsGrid');
+  
+  if (loadMoreBtn && reviewsGrid) {
+    loadMoreBtn.addEventListener('click', () => {
+      const reviewCards = reviewsGrid.querySelectorAll('.review-card');
+      let newVisibleCount = 0;
+      
+      // Show next 6 reviews
+      reviewCards.forEach((card, index) => {
+        if (index >= currentVisibleIndex && index < currentVisibleIndex + 6) {
+          card.classList.remove('hidden-review');
+          newVisibleCount++;
+        }
+      });
+      
+      currentVisibleIndex += 6;
+      
+      // Hide button if all reviews are visible
+      if (currentVisibleIndex >= reviewCards.length) {
+        loadMoreBtn.style.display = 'none';
+      }
+    });
+  }
+
+
+  // AOS: disable animation on mobile so content is immediately visible and stable
+  if (window.AOS) {
+    const isMobileScreen = window.matchMedia('(max-width: 767px)').matches;
+
+    if (isMobileScreen) {
+      document.querySelectorAll('[data-aos]').forEach((element) => {
+        element.removeAttribute('data-aos');
+        element.removeAttribute('data-aos-delay');
+        element.removeAttribute('data-aos-duration');
+      });
+      AOS.init({ disable: true });
+    } else {
+      AOS.init({
+        duration: 700,
+        easing: 'ease-out-quart',
+        once: true
+      });
+    }
+  }
+</script>

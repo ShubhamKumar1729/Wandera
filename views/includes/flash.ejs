@@ -1,0 +1,56 @@
+<script>
+    (function () {
+        var successMessages = <%- JSON.stringify(success || []) %>;
+        var errorMessages = <%- JSON.stringify(error || []) %>;
+        var TOAST_DURATION = 3000;
+
+        function ensureToastContainer() {
+            var container = document.getElementById("wishlist-toast-container");
+
+            if (!container) {
+                container = document.createElement("div");
+                container.id = "wishlist-toast-container";
+                container.className = "wishlist-toast-container";
+                document.body.appendChild(container);
+            }
+
+            return container;
+        }
+
+        function showToast(message, type) {
+            if (!message) return;
+
+            var container = ensureToastContainer();
+            var toast = document.createElement("div");
+            toast.className = "wishlist-toast " + (type || "info");
+
+            var icon = document.createElement("i");
+            if (type === "error") {
+                icon.className = "bi bi-exclamation-circle-fill";
+            } else if (type === "success") {
+                icon.className = "bi bi-heart-fill";
+            } else {
+                icon.className = "bi bi-info-circle-fill";
+            }
+
+            var text = document.createElement("span");
+            text.textContent = message;
+
+            toast.appendChild(icon);
+            toast.appendChild(text);
+            container.appendChild(toast);
+
+            window.setTimeout(function () {
+                toast.remove();
+            }, TOAST_DURATION);
+        }
+
+        successMessages.forEach(function (msg) {
+            showToast(msg, "success");
+        });
+
+        errorMessages.forEach(function (msg) {
+            showToast(msg, "error");
+        });
+    })();
+</script>

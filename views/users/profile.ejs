@@ -1,0 +1,905 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .profile-shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 0 2.5rem;
+  }
+
+  .profile-card {
+    background: #ffffff;
+    border: 1px solid rgba(19, 39, 70, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  }
+
+  .profile-hero {
+    padding: 1.5rem;
+    background: linear-gradient(130deg, rgba(13, 110, 253, 0.08), rgba(77, 171, 247, 0.05));
+  }
+
+  .profile-avatar-logo {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: none;
+    background: #0f172a;
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .profile-avatar-logo:hover,
+  .profile-avatar-logo:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 5px rgba(13, 110, 253, 0.2);
+  }
+
+  .profile-avatar-logo img,
+  .avatar-viewer-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-title {
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .profile-subtitle {
+    margin: 0.3rem 0 0;
+    color: #5f6d80;
+  }
+
+  .profile-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+  }
+
+  .profile-stat {
+    padding: 0.8rem 0.9rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(19, 39, 70, 0.08);
+  }
+
+  .profile-stat-label {
+    display: block;
+    color: #66778d;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .profile-stat-value {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #172033;
+  }
+
+  .profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .profile-info-block {
+    border-radius: 16px;
+    border: 1px solid rgba(19, 39, 70, 0.1);
+    background: #f8fbff;
+    padding: 1rem;
+  }
+
+  .profile-info-label {
+    color: #6a7b91;
+    font-size: 0.8rem;
+    margin-bottom: 0.35rem;
+    display: block;
+  }
+
+  .profile-info-value {
+    color: #182235;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin: 1.75rem 0 0.9rem;
+  }
+
+  .section-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #182235;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .profile-item-card {
+    border: 1px solid rgba(19, 39, 70, 0.1);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .profile-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+  }
+
+  .profile-item-media {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+    background: #dde6f3;
+  }
+
+  .profile-item-content {
+    padding: 0.95rem;
+  }
+
+  .profile-item-title {
+    font-weight: 700;
+    margin: 0;
+    color: #182235;
+    line-height: 1.3;
+  }
+
+  .profile-item-meta {
+    margin-top: 0.3rem;
+    color: #63748a;
+    font-size: 0.86rem;
+  }
+
+  .profile-item-actions {
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+  }
+
+  .empty-card {
+    border: 1px dashed rgba(19, 39, 70, 0.25);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    color: #62748c;
+    background: #fbfdff;
+  }
+
+  .avatar-viewer-modal,
+  .confirm-action-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 12, 27, 0.42);
+    backdrop-filter: blur(1px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1080;
+    padding: 1rem;
+  }
+
+  .avatar-viewer-card,
+  .confirm-action-card {
+    width: min(430px, 100%);
+    background: #fff;
+    border-radius: 18px;
+    padding: 1.3rem;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+  }
+
+  .avatar-viewer-card {
+    width: min(460px, 100%);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(19, 39, 70, 0.12);
+    background: rgba(255, 255, 255, 0.74);
+    backdrop-filter: blur(6px);
+  }
+
+  .avatar-viewer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 1rem 1.1rem;
+    background: linear-gradient(135deg, #4a90e2 0%, #245a96 100%);
+    color: #fff;
+  }
+
+  .avatar-viewer-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .avatar-viewer-close {
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .avatar-viewer-close:hover,
+  .avatar-viewer-close:focus-visible {
+    transform: scale(1.06);
+    background: rgba(255, 255, 255, 0.32);
+  }
+
+  .avatar-viewer-body {
+    padding: 1.25rem 1.2rem 1.2rem;
+  }
+
+  .avatar-viewer-help {
+    margin: 0.9rem 0 1rem;
+    color: #5f6d80;
+    font-size: 0.92rem;
+    text-align: center;
+  }
+
+  .avatar-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .avatar-action-btn {
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+  }
+
+  .avatar-viewer-preview {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+    border: none;
+    background: rgba(255, 255, 255, 0.58);
+    color: #1f2a37;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: 700;
+  }
+
+  .avatar-viewer-preview {
+    box-shadow: 0 8px 30px rgba(13, 110, 253, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .profile-shell {
+      padding-top: 0.5rem;
+      padding-bottom: 1.4rem;
+    }
+
+    .profile-hero {
+      padding: 1.1rem;
+    }
+
+    .profile-stat-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .profile-info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-header-row {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 1.3rem;
+      gap: 0.55rem;
+    }
+
+    .profile-grid {
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+    }
+
+    .profile-item-media {
+      height: 150px;
+    }
+
+    .profile-item-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .profile-item-actions .btn,
+    .profile-item-actions form .btn {
+      width: 100%;
+    }
+
+    .profile-account-actions {
+      justify-content: stretch;
+    }
+
+    .profile-account-actions .btn,
+    .profile-account-actions form,
+    .profile-account-actions form .btn {
+      width: 100%;
+    }
+
+    .avatar-viewer-modal,
+    .confirm-action-modal {
+      padding: 0.75rem;
+    }
+
+    .avatar-viewer-card,
+    .confirm-action-card {
+      width: 100%;
+      max-height: calc(100vh - 1.5rem);
+      overflow-y: auto;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .profile-title {
+      font-size: 1.35rem;
+    }
+
+    .profile-subtitle {
+      font-size: 0.9rem;
+    }
+
+    .profile-stat-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-avatar-logo {
+      width: 74px;
+      height: 74px;
+      font-size: 1.5rem;
+    }
+
+    .avatar-viewer-preview {
+      width: 180px;
+      height: 180px;
+      font-size: 3rem;
+    }
+  }
+
+  .dark-mode .profile-card,
+  [data-theme="dark"] .profile-card {
+    background: #1b2638;
+    border-color: #2c3b53;
+  }
+
+  .dark-mode .profile-hero,
+  [data-theme="dark"] .profile-hero {
+    background: linear-gradient(130deg, rgba(48, 93, 169, 0.34), rgba(31, 57, 97, 0.2));
+  }
+
+  .dark-mode .profile-title,
+  [data-theme="dark"] .profile-title,
+  .dark-mode .section-title,
+  [data-theme="dark"] .section-title,
+  .dark-mode .profile-stat-value,
+  [data-theme="dark"] .profile-stat-value,
+  .dark-mode .profile-info-value,
+  [data-theme="dark"] .profile-info-value,
+  .dark-mode .profile-item-title,
+  [data-theme="dark"] .profile-item-title {
+    color: #e8f1ff;
+  }
+
+  .dark-mode .profile-subtitle,
+  [data-theme="dark"] .profile-subtitle,
+  .dark-mode .profile-item-meta,
+  [data-theme="dark"] .profile-item-meta,
+  .dark-mode .profile-stat-label,
+  [data-theme="dark"] .profile-stat-label,
+  .dark-mode .profile-info-label,
+  [data-theme="dark"] .profile-info-label,
+  .dark-mode .empty-card,
+  [data-theme="dark"] .empty-card {
+    color: #adc0da;
+  }
+
+  .dark-mode .profile-info-block,
+  [data-theme="dark"] .profile-info-block,
+  .dark-mode .profile-stat,
+  [data-theme="dark"] .profile-stat,
+  .dark-mode .profile-item-card,
+  [data-theme="dark"] .profile-item-card,
+  .dark-mode .empty-card,
+  [data-theme="dark"] .empty-card {
+    background: #182335;
+    border-color: #31435f;
+  }
+
+  .dark-mode .avatar-viewer-card,
+  [data-theme="dark"] .avatar-viewer-card,
+  .dark-mode .confirm-action-card,
+  [data-theme="dark"] .confirm-action-card {
+    background: #1a273a;
+    color: #e8f1ff;
+  }
+
+  .dark-mode .avatar-viewer-card,
+  [data-theme="dark"] .avatar-viewer-card {
+    background: rgba(26, 39, 58, 0.72);
+    backdrop-filter: blur(6px);
+  }
+
+  .dark-mode .avatar-viewer-head,
+  [data-theme="dark"] .avatar-viewer-head {
+    background: linear-gradient(135deg, #4a90e2 0%, #245a96 100%);
+  }
+
+  .dark-mode .avatar-viewer-help,
+  [data-theme="dark"] .avatar-viewer-help {
+    color: #adc0da;
+  }
+
+  .dark-mode .avatar-viewer-preview,
+  [data-theme="dark"] .avatar-viewer-preview {
+    background: rgba(18, 31, 53, 0.56);
+    color: #e8f1ff;
+  }
+
+  .dark-mode .profile-shell .btn-outline-dark,
+  [data-theme="dark"] .profile-shell .btn-outline-dark {
+    color: #e8f1ff;
+    border-color: #88a4c6;
+  }
+
+  .dark-mode .profile-shell .btn-outline-dark:hover,
+  [data-theme="dark"] .profile-shell .btn-outline-dark:hover,
+  .dark-mode .profile-shell .btn-outline-dark:focus,
+  [data-theme="dark"] .profile-shell .btn-outline-dark:focus {
+    color: #0f1a2c;
+    background: #bcd4ef;
+    border-color: #bcd4ef;
+  }
+
+  .profile-account-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+  }
+
+  .profile-mobile-links {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .profile-mobile-links {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+
+    .profile-mobile-link {
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0.85rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .profile-mobile-link-count {
+      font-weight: 700;
+    }
+
+    .profile-mobile-hide {
+      display: none !important;
+    }
+  }
+</style>
+
+<div class="profile-shell">
+  <section class="profile-card profile-hero">
+    <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3 flex-wrap">
+        <form id="avatarUploadForm" action="/profile/photo" method="POST" enctype="multipart/form-data" class="mb-0">
+          <input id="avatarUploadInput" type="file" name="profileImage" accept="image/*" style="display:none;">
+          <button
+            type="button"
+            id="avatarUploadTrigger"
+            class="profile-avatar-logo"
+            title="<%= user.profileImage && user.profileImage.url ? 'View or update profile picture' : 'Upload profile picture' %>"
+          >
+            <% if (user.profileImage && user.profileImage.url) { %>
+              <img src="<%= user.profileImage.url %>" alt="Profile picture">
+            <% } else { %>
+              <%= user.username.charAt(0).toUpperCase() %>
+            <% } %>
+          </button>
+        </form>
+        <form id="avatarDeleteForm" action="/profile/photo/delete" method="POST" class="d-none"></form>
+
+        <div>
+          <h2 class="profile-title">Welcome, <%= user.username %></h2>
+          <p class="profile-subtitle">Manage your account, destinations, and wishlist from one premium dashboard.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-stat-grid">
+      <div class="profile-stat">
+        <span class="profile-stat-label">My Destinations</span>
+        <span class="profile-stat-value"><%= (typeof myExperiencesCount !== 'undefined' ? myExperiencesCount : (Array.isArray(myExperiences) ? myExperiences.length : 0)) %></span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat-label">Wishlist</span>
+        <span class="profile-stat-value"><%= wishlistCount %></span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat-label">Email Verified</span>
+        <span class="profile-stat-value"><%= user.email ? 'Yes' : 'No' %></span>
+      </div>
+    </div>
+
+    <div class="profile-mobile-links">
+      <a href="/profile/experiences" class="btn btn-outline-dark profile-mobile-link">
+        <span>My Destinations</span>
+      </a>
+      <a href="/profile/wishlist" class="btn btn-outline-dark profile-mobile-link">
+        <span>Wishlist</span>
+      </a>
+    </div>
+
+    <div class="profile-info-grid">
+      <div class="profile-info-block">
+        <span class="profile-info-label">Username</span>
+        <div id="usernameStaticWrap">
+          <p id="usernameStaticValue" class="profile-info-value mb-2"><%= user.username %></p>
+          <button id="usernameEditBtn" class="btn btn-dark btn-sm" type="button">Edit Username</button>
+        </div>
+        <form id="usernameEditForm" action="/profile/username" method="POST" class="d-grid gap-2 d-none mt-2">
+          <input id="usernameInput" type="text" name="username" value="<%= user.username %>" class="form-control form-control-sm" required>
+          <div class="d-flex gap-2">
+            <button class="btn btn-dark btn-sm" type="submit">Save</button>
+            <button id="usernameCancelBtn" class="btn btn-outline-secondary btn-sm" type="button">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="profile-info-block">
+        <span class="profile-info-label">Email</span>
+        <p class="profile-info-value"><%= user.email %></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="profile-mobile-hide">
+    <div class="section-header-row">
+      <h3 class="section-title">My Destinations</h3>
+      <a href="/profile/experiences" class="btn btn-outline-dark btn-sm">View All</a>
+    </div>
+
+    <% if (myExperiences && myExperiences.length > 0) { %>
+      <section class="profile-grid">
+        <% myExperiences.forEach((item) => { %>
+          <article class="profile-item-card">
+            <a href="/listings/<%= item._id %>">
+              <img class="profile-item-media" src="<%= item.image && item.image.url ? item.image.url : 'https://via.placeholder.com/600x400' %>" alt="<%= item.title %>">
+            </a>
+            <div class="profile-item-content">
+              <p class="profile-item-title"><%= item.title %></p>
+              <p class="profile-item-meta"><%= item.location %>, <%= item.country %></p>
+              <p class="profile-item-meta mb-0">Budget: ₹<%= Number(item.budget ?? item.price ?? 0).toLocaleString('en-IN') %></p>
+              <div class="profile-item-actions">
+                <a href="/listings/<%= item._id %>/edit" class="btn btn-sm btn-dark">Edit Destination</a>
+                <form method="POST" action="/listings/<%= item._id %>?_method=DELETE" class="confirm-form mb-0" data-confirm-message="Delete this destination? This action cannot be undone.">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </section>
+    <% } else { %>
+      <div class="empty-card">
+        <p class="mb-3">No destinations shared yet.</p>
+        <a href="/listings/new" class="btn btn-dark btn-sm">Add Your First Destination</a>
+      </div>
+    <% } %>
+
+    <div class="section-header-row">
+      <h3 class="section-title">Wishlist</h3>
+      <a href="/profile/wishlist" class="btn btn-outline-dark btn-sm">View All</a>
+    </div>
+
+    <% if (wishlistListings && wishlistListings.length > 0) { %>
+      <section class="profile-grid">
+        <% wishlistListings.forEach((item) => { %>
+          <article class="profile-item-card">
+            <a href="/listings/<%= item._id %>">
+              <img class="profile-item-media" src="<%= item.image && item.image.url ? item.image.url : 'https://via.placeholder.com/600x400' %>" alt="<%= item.title %>">
+            </a>
+            <div class="profile-item-content">
+              <p class="profile-item-title"><%= item.title %></p>
+              <p class="profile-item-meta"><%= item.location %>, <%= item.country %></p>
+              <p class="profile-item-meta mb-0">Budget: ₹<%= Number(item.budget ?? item.price ?? 0).toLocaleString('en-IN') %></p>
+              <div class="profile-item-actions">
+                <a href="/listings/<%= item._id %>" class="btn btn-sm btn-dark">Open</a>
+                <form method="POST" action="/listings/<%= item._id %>/wishlist" class="confirm-form mb-0" data-confirm-message="Remove this destination from wishlist?">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </section>
+    <% } else { %>
+      <div class="empty-card">
+        <p class="mb-3">Your wishlist is empty.</p>
+        <a href="/listings" class="btn btn-dark btn-sm">Explore Destinations</a>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="profile-account-actions">
+    <a href="/logout" id="profileLogoutBtn" class="btn btn-outline-danger" data-confirm-message="Are you sure you want to logout?">Logout</a>
+    <form method="POST" action="/profile/delete-account" class="confirm-form mb-0" data-confirm-message="Delete your account permanently? All your listings and reviews will be removed.">
+      <button type="submit" class="btn btn-danger">Delete Account</button>
+    </form>
+  </div>
+</div>
+
+<div id="avatarViewerModal" class="avatar-viewer-modal d-none" role="dialog" aria-modal="true" aria-label="Profile image options">
+  <div class="avatar-viewer-card">
+    <div class="avatar-viewer-head">
+      <h4 class="avatar-viewer-title">Profile Picture</h4>
+      <button type="button" id="avatarActionClose" class="avatar-viewer-close" aria-label="Close profile image modal">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="avatar-viewer-body text-center">
+      <div class="avatar-viewer-preview">
+        <% if (user.profileImage && user.profileImage.url) { %>
+          <img src="<%= user.profileImage.url %>" alt="Profile picture" />
+        <% } else { %>
+          <%= user.username.charAt(0).toUpperCase() %>
+        <% } %>
+      </div>
+
+      <p class="avatar-viewer-help">
+        Keep your profile fresh with a clear photo. You can update or remove it anytime.
+      </p>
+
+      <div class="avatar-actions-grid">
+        <button type="button" id="avatarActionUpdate" class="btn btn-dark avatar-action-btn">
+          <i class="bi bi-upload"></i>
+          <%= user.profileImage && user.profileImage.url ? 'Update image' : 'Upload image' %>
+        </button>
+        <% if (user.profileImage && user.profileImage.url) { %>
+          <button type="button" id="avatarActionDelete" class="btn btn-outline-danger avatar-action-btn">
+            <i class="bi bi-trash3"></i>
+            Delete image
+          </button>
+        <% } %>
+        <button type="button" id="avatarActionCancel" class="btn btn-outline-secondary avatar-action-btn">
+          <i class="bi bi-x-circle"></i>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="confirmActionModal" class="confirm-action-modal d-none" role="dialog" aria-modal="true" aria-label="Confirm action">
+  <div class="confirm-action-card">
+    <h5 class="mb-2">Please confirm</h5>
+    <p id="confirmActionMessage" class="mb-3 text-muted">Are you sure you want to continue?</p>
+    <div class="d-flex justify-content-end gap-2">
+      <button id="confirmActionCancel" type="button" class="btn btn-outline-secondary btn-sm">Cancel</button>
+      <button id="confirmActionProceed" type="button" class="btn btn-danger btn-sm">Yes, continue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const trigger = document.getElementById("avatarUploadTrigger");
+    const input = document.getElementById("avatarUploadInput");
+    const form = document.getElementById("avatarUploadForm");
+    const deleteForm = document.getElementById("avatarDeleteForm");
+    const modal = document.getElementById("avatarViewerModal");
+    const actionUpdate = document.getElementById("avatarActionUpdate");
+    const actionDelete = document.getElementById("avatarActionDelete");
+    const actionCancel = document.getElementById("avatarActionCancel");
+    const actionClose = document.getElementById("avatarActionClose");
+
+    const confirmModal = document.getElementById("confirmActionModal");
+    const confirmMessage = document.getElementById("confirmActionMessage");
+    const confirmCancel = document.getElementById("confirmActionCancel");
+    const confirmProceed = document.getElementById("confirmActionProceed");
+
+    let pendingAction = null;
+
+    function openConfirm(message, action) {
+      if (!confirmModal || !confirmMessage || !confirmProceed) return;
+      confirmMessage.textContent = message || "Are you sure you want to continue?";
+      pendingAction = action;
+      confirmModal.classList.remove("d-none");
+    }
+
+    function closeConfirm() {
+      if (!confirmModal) return;
+      confirmModal.classList.add("d-none");
+      pendingAction = null;
+    }
+
+    if (confirmProceed) {
+      confirmProceed.addEventListener("click", function () {
+        if (typeof pendingAction === "function") {
+          pendingAction();
+        }
+        closeConfirm();
+      });
+    }
+
+    if (confirmCancel) {
+      confirmCancel.addEventListener("click", closeConfirm);
+    }
+
+    if (confirmModal) {
+      confirmModal.addEventListener("click", function (event) {
+        if (event.target === confirmModal) {
+          closeConfirm();
+        }
+      });
+    }
+
+    document.querySelectorAll(".confirm-form").forEach((confirmForm) => {
+      confirmForm.addEventListener("submit", function (event) {
+        if (confirmForm.dataset.confirmed === "true") {
+          confirmForm.dataset.confirmed = "false";
+          return;
+        }
+
+        event.preventDefault();
+        const message = confirmForm.dataset.confirmMessage || "Are you sure you want to continue?";
+        openConfirm(message, function () {
+          confirmForm.dataset.confirmed = "true";
+
+          if (typeof confirmForm.requestSubmit === "function") {
+            confirmForm.requestSubmit();
+          } else {
+            HTMLFormElement.prototype.submit.call(confirmForm);
+          }
+        });
+      });
+    });
+
+    const logoutBtn = document.getElementById("profileLogoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        const message = logoutBtn.dataset.confirmMessage || "Are you sure you want to logout?";
+        openConfirm(message, function () {
+          window.location.href = logoutBtn.getAttribute("href");
+        });
+      });
+    }
+
+    if (!trigger || !input || !form || !modal || !actionUpdate || !actionCancel) return;
+
+    function openAvatarModal() {
+      modal.classList.remove("d-none");
+    }
+
+    function closeAvatarModal() {
+      modal.classList.add("d-none");
+    }
+
+    trigger.addEventListener("click", openAvatarModal);
+
+    actionUpdate.addEventListener("click", function () {
+      closeAvatarModal();
+      input.click();
+    });
+
+    if (actionDelete) {
+      actionDelete.addEventListener("click", function () {
+        closeAvatarModal();
+        openConfirm("Remove profile image?", function () {
+          deleteForm.submit();
+        });
+      });
+    }
+
+    actionCancel.addEventListener("click", closeAvatarModal);
+
+    if (actionClose) {
+      actionClose.addEventListener("click", closeAvatarModal);
+    }
+
+    input.addEventListener("change", function () {
+      if (input.files && input.files.length > 0) {
+        form.submit();
+      }
+    });
+
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeAvatarModal();
+      }
+    });
+
+    const usernameEditBtn = document.getElementById("usernameEditBtn");
+    const usernameEditForm = document.getElementById("usernameEditForm");
+    const usernameCancelBtn = document.getElementById("usernameCancelBtn");
+    const usernameInput = document.getElementById("usernameInput");
+    const usernameStaticWrap = document.getElementById("usernameStaticWrap");
+    const usernameStaticValue = document.getElementById("usernameStaticValue");
+
+    if (usernameEditBtn && usernameEditForm && usernameCancelBtn && usernameInput && usernameStaticWrap) {
+      usernameEditBtn.addEventListener("click", function () {
+        usernameEditForm.classList.remove("d-none");
+        usernameStaticWrap.classList.add("d-none");
+        usernameEditBtn.classList.add("d-none");
+        usernameInput.focus();
+        usernameInput.select();
+      });
+
+      usernameCancelBtn.addEventListener("click", function () {
+        usernameEditForm.classList.add("d-none");
+        usernameStaticWrap.classList.remove("d-none");
+        usernameEditBtn.classList.remove("d-none");
+        if (usernameStaticValue) {
+          usernameInput.value = usernameStaticValue.textContent.trim();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        if (modal && !modal.classList.contains("d-none")) {
+          closeAvatarModal();
+        }
+        if (confirmModal && !confirmModal.classList.contains("d-none")) {
+          closeConfirm();
+        }
+      }
+    });
+  })();
+</script>
