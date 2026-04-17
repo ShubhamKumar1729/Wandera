@@ -8,10 +8,30 @@ module.exports.createReview = async (req, res) => {
         return res.redirect("/listings");
     }
 
+    const existingReview = await Review.findOne({
+        listing: listing._id,
+        author: req.user._id
+    });
+
+    if (existingReview) {
+        req.flash("error", "You can add only one review for this destination.");
+        return res.redirect(`/listings/${listing._id}`);
+    }
+
     const newReview = new Review(req.body.review);
     newReview.author = req.user._id;
+    newReview.listing = listing._id;
 
-    await newReview.save();
+    try {
+        await newReview.save();
+    } catch (err) {
+        if (err && err.code === 11000) {
+            req.flash("error", "You can add only one review for this destination.");
+            return res.redirect(`/listings/${listing._id}`);
+        }
+        throw err;
+    }
+
     await Listing.findByIdAndUpdate(req.params.id, {
         $push: { reviews: newReview._id }
     });
